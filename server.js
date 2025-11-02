@@ -1,34 +1,19 @@
-import express from "express";
-import { startups } from "./data/data.js"
+import express from 'express'
+import { apiRouter } from './route/apiRoutes' 
+import cors from 'cors'
 
+const PORT = 8000
 
-const app = express();
-const PORT = process.env.PORT || 3000
+const app = express()
 
-app.get('/api', (req, res)=> {
+app.use(cors)
 
-    let filteredData = startups
-    const {industry, country, continent, is_seeking_funding, has_mvp} = req.query
+app.use('/api', apiRouter)
 
-    if(industry){
-        filteredData = filteredData.filter(
-            (startup)=> startup.industry.toLowerCase() === industry.toLowerCase()
-        );
-    }
-
-    if(country){
-        filteredData = filteredData.filter(
-            (startup) => startup.industry.toLowerCase() === industry.toLowerCase()
-        )
-    }
-
-    if(has_mvp){
-        filteredData = filteredData.filter(
-            (startup) => startup.industry === JSON.parse(has_mvp.toLowerCase())
-        )
-    }
-
-    res.json(filteredData)
+app.use((req, res) => {
+  res.status(404).json({ message: "Endpoint not found. Please check the API documentation." })
 })
 
-app.listen(PORT, ()=> console.log(`Server is running on port ${PORT}`))
+
+app.listen(PORT, () => console.log(`server connected on port ${PORT}`))
+  
